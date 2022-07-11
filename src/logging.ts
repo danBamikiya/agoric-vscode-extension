@@ -14,6 +14,7 @@ export interface ILogger {
 	logAndShowWarning(message: string, additionalMessages?: unknown): void
 	logError(message: string, additionalMessages?: unknown): void
 	logAndShowError(message: string, additionalMessages?: unknown): void
+	showLogPanel(preserveFocus?: boolean): void
 }
 
 export class LoggingService implements ILogger {
@@ -180,8 +181,8 @@ export class LoggingService implements ILogger {
 		}
 	}
 
-	private showLogPanel() {
-		this.outputChannel.show()
+	public showLogPanel(preserveFocus?: boolean) {
+		this.outputChannel.show(preserveFocus)
 	}
 
 	private logObject(data: unknown): void {
