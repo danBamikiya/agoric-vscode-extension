@@ -38,7 +38,7 @@ export default function autoUpdate(
 		return
 	} else {
 		if (isSameVersion) {
-			loggingService.log(`Agoric SDK up to date @${currAgoricVersion}`)
+			loggingService.log(`Agoric SDK already up to date @${currAgoricVersion}`)
 			return
 		} else {
 			// install again
