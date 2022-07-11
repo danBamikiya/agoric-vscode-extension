@@ -17,6 +17,7 @@ const installAgoric = () => {
 
 export function activate(context: vscode.ExtensionContext) {
 	loggingService = new LoggingService()
+	loggingService.showLogPanel()
 	installAgoric()
 
 	context.subscriptions.push(
