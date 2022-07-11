@@ -5,8 +5,9 @@ import utils = require('./utils')
 
 describe('agoric-vscode extension tests', () => {
 	let agoricExtension: vscode.Extension<any> | undefined
-	before(async () => {
+	before(async function () {
 		vscode.window.showInformationMessage('Starting all tests...')
+		this.timeout(1 * 60 * 1000)
 		agoricExtension = await utils.ensureExtensionIsActivated()
 	})
 
@@ -16,7 +17,7 @@ describe('agoric-vscode extension tests', () => {
 
 	it('should register all agoric commands', async () => {
 		const commands = await vscode.commands.getCommands(true)
-		const COMMANDS = ['agoric.install']
+		const COMMANDS = ['agoric.install', 'agoric.showLogs']
 		const foundAgoricCommands = commands.filter(
 			value => COMMANDS.indexOf(value) >= 0 || value.startsWith('agoric.')
 		)
