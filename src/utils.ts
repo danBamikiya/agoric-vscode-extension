@@ -49,9 +49,7 @@ export function setupAgoric(loggingService: ILogger) {
 	const agoricPath = path.resolve('agoric-sdk')
 
 	if (fs.existsSync(agoricPath)) {
-		loggingService.log(
-			'Error: agoric-sdk already exists, deleting the previous one...'
-		)
+		loggingService.log('Deleting previous version of Agoric SDK...')
 
 		fs.rmSync(agoricPath, { recursive: true, force: true })
 		loggingService.log('Successfully removed previous sdk.')
