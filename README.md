@@ -29,3 +29,10 @@ If want to opt out of this, set the `agoric.autoUpdate` option to false. Eg:
 ## Installation
 
 You can install the official release of the Agoric extension by following the steps in the Visual Studio Code documentation. In the Extensions pane, search for "Agoric" extension and install it there.
+
+## Running this extension locally
+
+- Clone this repo
+- Cd into the project folder
+- Install the project dependencies
+- Type <kbd>F5</kbd> then choose 'Run Extension' to interact with the extension or 'Extension Tests' to Run the extension integration tests.
