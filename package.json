@@ -5,12 +5,11 @@
   "description": "Deploy secure DeFi in JavaScript",
   "main": "./out/src/extension.js",
   "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
+    "vscode:prepublish": "npm run esbuild-base -- --minify",
+    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/src/extension.js --external:vscode --format=cjs --platform=node",
+    "esbuild": "rm -rf out && npm run esbuild-base -- --sourcemap",
+    "test": "rm -rf out && tsc -watch -p ./ && node ./out/src/test/runTest.js",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/src/test/runTest.js",
     "semantic-release": "semantic-release"
   },
   "repository": {
@@ -24,8 +23,8 @@
     "js",
     "smart contracts"
   ],
-  "author": "Dan Bamikiya <@danBamikiya>",
-  "publisher": "Agoric <@agoric>",
+  "author": "Dan Bamikiya <twitter.com/@danBamikiya>",
+  "publisher": "Dan Bamikiya<twitter.com/@danBamikiya>",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/danBamikiya/agoric-vscode-extension/issues"
@@ -88,6 +87,7 @@
     "@typescript-eslint/eslint-plugin": "^4.14.1",
     "@typescript-eslint/parser": "^4.14.1",
     "chai": "^4.3.0",
+    "esbuild": "^0.14.49",
     "eslint": "^7.19.0",
     "glob": "^7.1.6",
     "mocha": "^8.2.1",
