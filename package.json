@@ -24,7 +24,7 @@
     "smart contracts"
   ],
   "author": "Dan Bamikiya <twitter.com/@danBamikiya>",
-  "publisher": "Dan Bamikiya<twitter.com/@danBamikiya>",
+  "publisher": "danbmky",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/danBamikiya/agoric-vscode-extension/issues"
