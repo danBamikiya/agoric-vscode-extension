@@ -1,10 +1,12 @@
-import { spawnCmd, startInstall } from '../utils'
-import { window, workspace } from 'vscode'
+import { spawnCmd } from '../utils'
+import { workspace } from 'vscode'
 import { ILogger } from '../logging'
+import { AgoricTerminal } from '../terminal'
 
 export default function autoUpdate(
 	loggingService: ILogger,
-	currAgoricVersion: string
+	currAgoricVersion: string,
+	terminal: AgoricTerminal
 ) {
 	const agoricUpdatedVersion = spawnCmd('npm', [
 		'view',
@@ -29,7 +31,7 @@ export default function autoUpdate(
 					{
 						prompt: 'Update Agoric',
 						action: () => {
-							startInstall(loggingService)
+							terminal.startInstall()
 						}
 					}
 				]
@@ -42,7 +44,7 @@ export default function autoUpdate(
 			return
 		} else {
 			// install again
-			startInstall(loggingService)
+			terminal.startInstall()
 		}
 	}
 }

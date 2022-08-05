@@ -22,6 +22,16 @@ If want to opt out of this, set the `agoric.autoUpdate` option to false. Eg:
 }
 ```
 
+### agoric.installDir
+
+By default, this extension installs the Agoric SDK in the home directory. Configure a custom install directory by changing the field. Eg:
+
+```json
+{
+  "agoric.installDir": "/another-path"
+}
+```
+
 ## Keyboard Shortcuts
 
 - <kbd>CTRL/CMD</kbd> + <kbd>Shift</kbd> + <kbd>A</kbd> : Checks for SDK updates then installs & setups the new Agoric SDK version.
@@ -36,3 +46,5 @@ You can install the official release of the Agoric extension by following the st
 - Cd into the project folder
 - Install the project dependencies
 - Type <kbd>F5</kbd> then choose 'Run Extension' to interact with the extension or 'Extension Tests' to Run the extension integration tests.
+
+This extension is also installable on other non-local vscode platforms like vscode.dev, github.dev e.t.c

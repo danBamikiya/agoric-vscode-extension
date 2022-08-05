@@ -63,6 +63,11 @@
           "type": "boolean",
           "default": true,
           "description": "Auto update Agoric SDK on startup"
+        },
+        "agoric.installDir": {
+          "type": "string",
+          "default": null,
+          "description": "An explicit path where Agoric SDK will be installed"
         }
       }
     },

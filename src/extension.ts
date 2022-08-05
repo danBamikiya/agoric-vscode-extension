@@ -3,21 +3,24 @@ import { isPkgInstalled } from './utils'
 import autoInstall from './features/autoInstall'
 import autoUpdate from './features/autoUpdate'
 import { LoggingService } from './logging'
+import { AgoricTerminal } from './terminal'
 
 let loggingService: LoggingService
+let terminal: AgoricTerminal
 
 const installAgoric = () => {
 	const currAgoricVersion = isPkgInstalled('agoric') as string | false
 	if (currAgoricVersion) {
-		autoUpdate(loggingService, currAgoricVersion)
+		autoUpdate(loggingService, currAgoricVersion, terminal)
 	} else {
-		autoInstall(loggingService)
+		autoInstall(terminal)
 	}
 }
 
 export function activate(context: vscode.ExtensionContext) {
 	loggingService = new LoggingService()
-	loggingService.showLogPanel()
+	terminal = new AgoricTerminal('Agoric', loggingService)
+
 	installAgoric()
 
 	context.subscriptions.push(
@@ -30,4 +33,6 @@ export function activate(context: vscode.ExtensionContext) {
 export function deactivate() {
 	// Dispose of the logger
 	loggingService.dispose()
+	// Dispose of the termial
+	terminal.dispose()
 }
