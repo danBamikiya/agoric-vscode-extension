@@ -125,6 +125,12 @@ export class AgoricTerminal {
 
 		this.consoleTerminal?.sendText(`cd ${this.sdkDirName}`)
 
+		if (utils.isWindows) {
+			this.consoleTerminal?.sendText(
+				'Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process'
+			)
+		}
+
 		this.consoleTerminal?.sendText('yarn install')
 
 		this.consoleTerminal?.sendText('yarn build')
