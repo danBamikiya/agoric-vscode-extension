@@ -5,6 +5,7 @@ This extension automates the installation and setup of Agoric SDK for DeFi devel
 ## Prerequisites
 
 - Node.js LTS (version 14.15.0 or higher)
+- [node-gyp](https://www.npmjs.com/package/node-gyp)
 - Yarn (`npm install -g yarn`)
 
 Platform specific requirements are found on the Agoric SDK [repo](https://github.com/Agoric/agoric-sdk#readme)
@@ -39,6 +40,14 @@ By default, this extension installs the Agoric SDK in the home directory. Config
 ## Installation
 
 You can install the official release of the Agoric extension by following the steps in the Visual Studio Code documentation. In the Extensions pane, search for "Agoric" extension and install it there.
+
+## Viewing Debug logs
+
+You can view the debug logs of the setup in the 'Agoric' output channel by:
+
+- pressing <kbd>CTRL/CMD</kbd> + <kbd>Shift</kbd> + <kbd>U</kbd> on your keyboard
+- switching to the Agoric output channel as seen in the image below:
+  <img src='./resources/agoric-output-channel.png' alt='image of the agoric vscode extension output channel' />
 
 ## Running this extension locally
 
