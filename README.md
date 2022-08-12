@@ -2,6 +2,8 @@
 
 This extension automates the installation and setup of Agoric SDK for DeFi development in JavaScript.
 
+It assits in setting up your environment for building and deploying secure DeFi on Agoric - a Proof-of-Stake chain, with composable JavaScript Smart Contracts. 
+
 ## Prerequisites
 
 - Node.js LTS (version 14.15.0 or higher)
