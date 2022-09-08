@@ -7,7 +7,7 @@ It assits in setting up your environment for building and deploying secure DeFi 
 ## Prerequisites
 
 - Node.js LTS (version 14.15.0 or higher)
-- [node-gyp](https://www.npmjs.com/package/node-gyp)
+- [node-gyp](https://www.npmjs.com/package/node-gyp) **(you can check for this by running `node-gyp help` in your terminal)**
 - Yarn (`npm install -g yarn`)
 
 Platform specific requirements are found on the Agoric SDK [repo](https://github.com/Agoric/agoric-sdk#readme)
