@@ -97,7 +97,7 @@ export class AgoricTerminal {
 		return
 	}
 
-	private async setupAgoric(installDir: string) {
+	private setupAgoric(installDir: string) {
 		const agoricInstalled = utils.isAgoricInstalled(installDir, this.sdkDirName)
 
 		if (agoricInstalled) {
