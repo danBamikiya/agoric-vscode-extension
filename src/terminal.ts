@@ -89,9 +89,6 @@ export class AgoricTerminal {
 					this.loggingService.logWarning(
 						`${dependencyName} not installed. Installing ${dependencyName}...`
 					)
-					this.consoleTerminal?.sendText(
-						`${dependencyName} not installed. Installing ${dependencyName}...`
-					)
 					// go on to install the dependency
 					this.consoleTerminal?.sendText(cmd)
 				}
@@ -100,46 +97,11 @@ export class AgoricTerminal {
 		return
 	}
 
-	private setupAgoric(installDir: string) {
+	private async setupAgoric(installDir: string) {
 		const agoricInstalled = utils.isAgoricInstalled(installDir, this.sdkDirName)
 
 		if (agoricInstalled) {
-			this.loggingService.log('Deleting previous version of Agoric SDK...')
-			this.consoleTerminal?.sendText(
-				'Deleting previous version of Agoric SDK...'
-			)
-
-			// Remove the agoric-sdk directory made from the previously run `git clone ${sdkRepo}`
-			if (utils.isWindows) {
-				this.consoleTerminal?.sendText(
-					`Remove-Item -R -Force -Path ${installDir}/${this.sdkDirName}`
-				)
-			}
-			if (utils.isLinux || utils.isMacOS) {
-				this.consoleTerminal?.sendText(
-					`rm -rf ${installDir}/${this.sdkDirName}`
-				)
-			}
-
-			// Remove the command from path made from the previously run `yarn link-cli ~/bin/agoric`
-			if (utils.isWindows) {
-				this.consoleTerminal?.sendText(
-					`Remove-Item -R -Force -Path ${os.homedir()}/bin/agoric`
-				)
-			}
-			if (utils.isLinux || utils.isMacOS) {
-				this.consoleTerminal?.sendText(`rm -rf ~/bin/agoric`)
-			}
-
-			// Remove any other related path that may obstruct the setup
-			if (utils.isWindows) {
-				this.consoleTerminal?.sendText(
-					`Remove-Item -R -Force -Path ${installDir}/bin/agoric`
-				)
-			}
-			if (utils.isLinux || utils.isMacOS) {
-				this.consoleTerminal?.sendText(`rm -rf ${installDir}/bin/agoric`)
-			}
+			this.clearPrevSetup(installDir)
 		}
 
 		this.loggingService.log('Installing and setting up agoric-sdk...')
@@ -158,26 +120,50 @@ export class AgoricTerminal {
 		this.consoleTerminal?.sendText('yarn build')
 
 		this.consoleTerminal?.sendText('yarn link-cli ~/bin/agoric')
+
+		this.attemptPATHBinding()
 	}
 
-	private reportSetupStatus() {
-		const agoricVersion = utils.installStatus()
-		if (agoricVersion) {
-			this.reportDiagnostics()
-			this.loggingService.log(`Setup completed.`)
-			this.loggingService.log(`Agoric SDK setup @${agoricVersion}`)
-			vscode.window.showInformationMessage(`Agoric SDK setup @${agoricVersion}`)
-			vscode.window.showInformationMessage(
-				'Check out the docs https://agoric.com/documentation/'
+	private async clearPrevSetup(installDir: string) {
+		this.loggingService.log('Deleting previous version of Agoric SDK...')
+
+		// Remove the agoric-sdk directory made from the previously run `git clone ${sdkRepo}`
+		if (utils.isWindows) {
+			this.consoleTerminal?.sendText(
+				`Remove-Item -R -Force -Path ${installDir}\${this.sdkDirName}`
 			)
-		} else {
-			this.loggingService.logError(
-				'Failed to setup SDK: An error occured while setting up the SDK.'
-			)
+		}
+		if (utils.isLinux || utils.isMacOS) {
+			this.consoleTerminal?.sendText(`rm -rf ${installDir}/${this.sdkDirName}`)
+		}
+
+		// Remove the command from path made from the previously run `yarn link-cli ~/bin/agoric`
+		if (utils.isWindows) {
+			const prevDir = `${os.homedir()}\bin\agoric`
+			if (await utils.checkIfDirectoryExists(prevDir)) {
+				this.consoleTerminal?.sendText(`Remove-Item -R -Force -Path ${prevDir}`)
+			}
+		}
+		if (utils.isLinux || utils.isMacOS) {
+			this.consoleTerminal?.sendText(`rm -rf ~/bin/agoric`)
+		}
+
+		// Remove any other related path that may obstruct the setup
+		if (utils.isWindows) {
+			const dir = `${installDir}\bin\agoric`
+			if (await utils.checkIfDirectoryExists(dir)) {
+				this.consoleTerminal?.sendText(`Remove-Item -R -Force -Path ${dir}`)
+			}
+		}
+		if (utils.isLinux || utils.isMacOS) {
+			const dir = `${installDir}/bin/agoric`
+			if (await utils.checkIfDirectoryExists(dir)) {
+				this.consoleTerminal?.sendText(`rm -rf ${dir}`)
+			}
 		}
 	}
 
-	private reportDiagnostics() {
+	private attemptPATHBinding() {
 		const script = `${os.homedir()}/bin/agoric`
 		const bindir = path.dirname(script)
 
@@ -189,17 +175,32 @@ export class AgoricTerminal {
 			// Attempt Windows compatibility.
 			const sep = PATH.includes(';') ? ';' : ':'
 			if (!PATH.split(sep).includes(bindir)) {
-				const warning = `Script directory ${bindir} does not appear in $PATH`
-				let advice
+				this.loggingService.logWarning(
+					`Script directory ${bindir} does not appear in $PATH. Attempting to add it to your PATH environment variable`
+				)
+
 				if (sep === ';') {
-					advice = `setx PATH "%PATH%${sep}${bindir}"`
+					this.consoleTerminal?.sendText(`setx PATH "%PATH%${sep}${bindir}"`)
 				} else {
-					advice = `export PATH=$PATH${sep}${bindir}`
+					this.consoleTerminal?.sendText(`export PATH=$PATH${sep}${bindir}`)
 				}
-				this.loggingService.logAndShowWarning(warning, [
-					`(You may want to \`${advice}' to add it to your PATH environment variable)`
-				])
 			}
+		}
+	}
+
+	private reportSetupStatus() {
+		const agoricVersion = utils.installStatus()
+		if (agoricVersion) {
+			this.loggingService.log(`Setup completed.`)
+			this.loggingService.log(`Agoric SDK setup @${agoricVersion}`)
+			vscode.window.showInformationMessage(`Agoric SDK setup @${agoricVersion}`)
+			vscode.window.showInformationMessage(
+				'Check out the docs https://agoric.com/documentation/'
+			)
+		} else {
+			this.loggingService.logError(
+				'Failed to setup SDK: An error occured while setting up the SDK.'
+			)
 		}
 	}
 

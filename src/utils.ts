@@ -64,7 +64,9 @@ export function isAgoricInstalled(installDir: string, dirName: string) {
 	}
 }
 
-async function checkIfDirectoryExists(directoryPath: string): Promise<boolean> {
+export async function checkIfDirectoryExists(
+	directoryPath: string
+): Promise<boolean> {
 	try {
 		const stat: vscode.FileStat = await vscode.workspace.fs.stat(
 			vscode.Uri.file(directoryPath)
