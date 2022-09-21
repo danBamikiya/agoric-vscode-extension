@@ -130,7 +130,7 @@ export class AgoricTerminal {
 		// Remove the agoric-sdk directory made from the previously run `git clone ${sdkRepo}`
 		if (utils.isWindows) {
 			this.consoleTerminal?.sendText(
-				`Remove-Item -R -Force -Path ${installDir}\${this.sdkDirName}`
+				`Remove-Item -R -Force -Path ${installDir}/${this.sdkDirName}`
 			)
 		}
 		if (utils.isLinux || utils.isMacOS) {

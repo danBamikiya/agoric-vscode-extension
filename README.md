@@ -2,7 +2,7 @@
 
 This extension automates the installation and setup of Agoric SDK for DeFi development in JavaScript.
 
-It assits in setting up your environment for building and deploying secure DeFi on Agoric - a Proof-of-Stake chain, with composable JavaScript Smart Contracts. 
+It assits in setting up your environment for building and deploying secure DeFi on Agoric - a Proof-of-Stake chain, with composable JavaScript Smart Contracts.
 
 ## Prerequisites
 
@@ -10,7 +10,18 @@ It assits in setting up your environment for building and deploying secure DeFi 
 - [node-gyp](https://www.npmjs.com/package/node-gyp) **(you can check for this by running `node-gyp help` in your terminal)**
 - Yarn (`npm install -g yarn`)
 
-Platform specific requirements are found on the Agoric SDK [repo](https://github.com/Agoric/agoric-sdk#readme)
+Platform specific requirements are found on the Agoric SDK **[repo](https://github.com/Agoric/agoric-sdk#readme)**
+
+## Installation
+
+1. Open the **Extensions** sidebar in VS Code. `View → Extensions`
+2. Search for `Agoric`, choose "Agoric" by **danbmky**
+3. Click **Install** to install it
+
+**This extension is also installable on other non-local vscode platforms like:**
+
+- vscode.dev
+- github.dev
 
 ## Options
 
@@ -39,10 +50,6 @@ By default, this extension installs the Agoric SDK in the home directory. Config
 
 - <kbd>CTRL/CMD</kbd> + <kbd>Shift</kbd> + <kbd>A</kbd> : Checks for SDK updates then installs & setups the new Agoric SDK version.
 
-## Installation
-
-You can install the official release of the Agoric extension by following the steps in the Visual Studio Code documentation. In the Extensions pane, search for "Agoric" extension and install it there.
-
 ## Viewing Debug logs
 
 You can view the debug logs of the setup in the 'Agoric' output channel by:
@@ -58,4 +65,4 @@ You can view the debug logs of the setup in the 'Agoric' output channel by:
 - Install the project dependencies
 - Type <kbd>F5</kbd> then choose 'Run Extension' to interact with the extension or 'Extension Tests' to Run the extension integration tests.
 
-This extension is also installable on other non-local vscode platforms like vscode.dev, github.dev e.t.c
+Created by [Dan Bamikiya](https://github.com/danBamikiya). Go follow me on [Twitter](https://twitter.com/danBamikiya)!
