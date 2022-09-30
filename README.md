@@ -66,3 +66,7 @@ You can view the debug logs of the setup in the 'Agoric' output channel by:
 - Type <kbd>F5</kbd> then choose 'Run Extension' to interact with the extension or 'Extension Tests' to Run the extension integration tests.
 
 Created by [Dan Bamikiya](https://github.com/danBamikiya). Go follow me on [Twitter](https://twitter.com/danBamikiya)!
+
+### LICENSE
+
+Agoric Extension is released under the [Apache License 2.0](https://github.com/danBamikiya/agoric-vscode-extension/blob/main/LICENSE)
