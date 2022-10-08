@@ -19,6 +19,7 @@ export class AgoricTerminal {
 
 	private sdkDirName = 'agoric-sdk'
 	private sdkRepo = 'https://github.com/Agoric/agoric-sdk'
+	private sdkRepoBranch = 'community-dev'
 
 	constructor(private title: string, private loggingService: ILogger) {
 		this.onExited = this.onExitedEmitter.event
@@ -105,7 +106,9 @@ export class AgoricTerminal {
 		}
 
 		this.loggingService.log('Installing and setting up agoric-sdk...')
-		this.consoleTerminal?.sendText(`git clone ${this.sdkRepo}`)
+		this.consoleTerminal?.sendText(
+			`git clone -b ${this.sdkRepoBranch} ${this.sdkRepo}`
+		)
 
 		this.consoleTerminal?.sendText(`cd ${this.sdkDirName}`)
 
