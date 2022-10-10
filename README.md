@@ -10,7 +10,7 @@ It assits in setting up your environment for building and deploying secure DeFi 
 - [node-gyp](https://www.npmjs.com/package/node-gyp) **(you can check for this by running `node-gyp help` in your terminal)**
 - Yarn (`npm install -g yarn`)
 
-Platform specific requirements are found on the Agoric SDK **[repo](https://github.com/Agoric/agoric-sdk#readme)**
+Platform specific requirements are found at the Agoric SDK **[repo](https://github.com/Agoric/agoric-sdk#readme)**
 
 ## Installation
 
@@ -28,7 +28,7 @@ Platform specific requirements are found on the Agoric SDK **[repo](https://gith
 ### agoric.autoUpdate
 
 By default, on startup, **Agoric** checks for SDK updates at the NPM registry and updates the version locally.
-If want to opt out of this, set the `agoric.autoUpdate` option to false. Eg:
+If you want to opt out of this, set the `agoric.autoUpdate` option to false. Eg:
 
 ```json
 {
@@ -63,7 +63,7 @@ You can view the debug logs of the setup in the 'Agoric' output channel by:
 - Clone this repo
 - Cd into the project folder
 - Install the project dependencies
-- Type <kbd>F5</kbd> then choose 'Run Extension' to interact with the extension or 'Extension Tests' to Run the extension integration tests.
+- Type <kbd>F5</kbd> then choose 'Run Extension' to interact with the extension or choose 'Extension Tests' to Run the extension integration tests.
 
 Created by [Dan Bamikiya](https://github.com/danBamikiya). Go follow me on [Twitter](https://twitter.com/danBamikiya)!
 
