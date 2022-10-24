@@ -1,32 +1,50 @@
-import { spawnCmd } from '../utils'
+import utils = require('../utils')
 import { workspace } from 'vscode'
 import { ILogger } from '../logging'
 import { AgoricTerminal } from '../terminal'
+import path = require('path')
 
-export default function autoUpdate(
+export default async function autoUpdate(
 	loggingService: ILogger,
 	currAgoricVersion: string,
 	terminal: AgoricTerminal
 ) {
-	const agoricUpdatedVersion = spawnCmd('npm', [
-		'view',
-		'agoric',
-		'version'
-	]) as string | null
+	const installDir = await utils.getInstallDir()
+	const agoricSDKPath = path.resolve(installDir, 'agoric-sdk')
+	await utils.ensureCorrectSDKFolderGitBranch(loggingService)
 
-	const semverRegex = /\d./g
-	const isSameVersion =
-		agoricUpdatedVersion &&
-		semverRegex.test(agoricUpdatedVersion) &&
-		currAgoricVersion === agoricUpdatedVersion
+	const lastLocalAgoricSDKCommit = utils.spawnCmd(
+		'git',
+		['log', '-1', '--pretty=format:%h'],
+		{
+			cwd: agoricSDKPath
+		}
+	)
 
-	const autoUpdate: boolean =
-		workspace.getConfiguration('agoric').get('autoUpdate') || true
+	utils.spawnCmd('git', ['fetch', 'origin', `${utils.sdkRepoBranch}`], {
+		cwd: agoricSDKPath
+	})
 
-	if (!autoUpdate) {
-		if (!isSameVersion) {
+	const lastRemoteAgoricSDKCommit = utils.spawnCmd(
+		'git',
+		['log', '-1', `origin/${utils.sdkRepoBranch}`, '--pretty=format:%h'],
+		{
+			cwd: agoricSDKPath
+		}
+	)
+
+	const isSameAgoricSDKVersion =
+		lastLocalAgoricSDKCommit === lastRemoteAgoricSDKCommit
+
+	if (isSameAgoricSDKVersion) {
+		loggingService.log(`Agoric SDK already up to date @${currAgoricVersion}`)
+		return
+	} else {
+		const autoUpdate: boolean =
+			workspace.getConfiguration('agoric').get('autoUpdate') || true
+		if (!autoUpdate) {
 			loggingService.logAndShowInfoWithActions(
-				`New version of Agoric available @${agoricUpdatedVersion}`,
+				'New version of Agoric available',
 				[
 					{
 						prompt: 'Update Agoric',
@@ -36,15 +54,10 @@ export default function autoUpdate(
 					}
 				]
 			)
-		}
-		return
-	} else {
-		if (isSameVersion) {
-			loggingService.log(`Agoric SDK already up to date @${currAgoricVersion}`)
-			return
 		} else {
 			// install again
 			terminal.startInstall()
 		}
+		return
 	}
 }
