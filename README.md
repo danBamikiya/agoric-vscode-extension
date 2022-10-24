@@ -27,7 +27,7 @@ Platform specific requirements are found at the Agoric SDK **[repo](https://gith
 
 ### agoric.autoUpdate
 
-By default, on startup, **Agoric** checks for SDK updates at the NPM registry and updates the version locally.
+By default, on startup, **Agoric** checks for SDK updates and updates the version locally.
 If you want to opt out of this, set the `agoric.autoUpdate` option to false. Eg:
 
 ```json
