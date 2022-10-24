@@ -3,12 +3,18 @@ const fs = require('fs')
 const process = require('process')
 const spawnSync = require('cross-spawn').sync
 const commandExistsSync = require('command-exists').sync
+import path = require('path')
 import { SpawnSyncOptions, SpawnSyncReturns } from 'child_process'
 import * as vscode from 'vscode'
+import { ILogger } from './logging'
 
 export const isMacOS: boolean = process.platform === 'darwin'
 export const isWindows: boolean = process.platform === 'win32'
 export const isLinux: boolean = !isMacOS && !isWindows
+
+export const sdkDirName = 'agoric-sdk'
+export const sdkRepo = 'https://github.com/Agoric/agoric-sdk'
+export const sdkRepoBranch = 'community-dev'
 
 export function spawnCmd(
 	command: string,
@@ -87,4 +93,31 @@ export async function getInstallDir() {
 		return os.homedir()
 	}
 	return installDir
+}
+
+/*
+ * Ensures we're in the set (by user or the default one) sdk folder branch we'll building the cli from
+ */
+export async function ensureCorrectSDKFolderGitBranch(loggingService: ILogger) {
+	const installDir = await getInstallDir()
+	const agoricSDKPath = path.resolve(installDir, 'agoric-sdk')
+	try {
+		const currentGitBranch = spawnCmd('git', ['branch', '--show-current'], {
+			cwd: agoricSDKPath
+		}) as string | null
+
+		if (currentGitBranch === sdkRepoBranch) {
+			return
+		} else {
+			spawnCmd('git', ['checkout', `${sdkRepoBranch}`], {
+				cwd: agoricSDKPath
+			})
+			return
+		}
+	} catch (error: any) {
+		loggingService.logAndShowError(
+			"Couldn't Ensure The Agoric SDK Branch",
+			error
+		)
+	}
 }

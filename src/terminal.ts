@@ -17,9 +17,9 @@ export class AgoricTerminal {
 	private consoleCloseSubscription: vscode.Disposable | undefined
 	private consoleChangeSubscription: vscode.Disposable | undefined
 
-	private sdkDirName = 'agoric-sdk'
-	private sdkRepo = 'https://github.com/Agoric/agoric-sdk'
-	private sdkRepoBranch = 'community-dev'
+	private sdkDirName = utils.sdkDirName
+	private sdkRepo = utils.sdkRepo
+	private sdkRepoBranch = utils.sdkRepoBranch
 
 	constructor(private title: string, private loggingService: ILogger) {
 		this.onExited = this.onExitedEmitter.event
