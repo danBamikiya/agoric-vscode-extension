@@ -39,7 +39,7 @@
     "Debuggers"
   ],
   "extensionKind": [
-    "ui"
+    "workspace"
   ],
   "activationEvents": [
     "onStartupFinished",
