@@ -18,6 +18,8 @@ Platform specific requirements are found at the Agoric SDK **[repo](https://gith
 2. Search for `Agoric`, choose "Agoric" by **danbmky**
 3. Click **Install** to install it
 
+**This Extension is now available on Gitpod and Github Codespaces**
+
 ## Options
 
 ### agoric.autoUpdate
