@@ -1,6 +1,6 @@
 {
   "name": "agoric-vscode",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "displayName": "Agoric",
   "description": "Deploy secure DeFi in JavaScript",
   "main": "./out/src/extension.js",
