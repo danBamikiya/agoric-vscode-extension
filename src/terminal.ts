@@ -156,7 +156,7 @@ export class AgoricTerminal {
 			// remove command from temporary path
 			this.consoleTerminal?.sendText(`rm -rf ~/bin/agoric`)
 			// remove command from permanent path
-			this.consoleTerminal?.sendText(`rm -rf /usr/local/bin/agoric`)
+			this.consoleTerminal?.sendText(`sudo rm -rf /usr/local/bin/agoric`)
 		}
 
 		/* Remove any other related path that may obstruct the setup */
