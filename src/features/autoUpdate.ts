@@ -9,27 +9,28 @@ export default async function autoUpdate(
 	currAgoricVersion: string,
 	terminal: AgoricTerminal
 ) {
-	const installDir = await utils.getInstallDir()
-	const agoricSDKPath = path.resolve(installDir, 'agoric-sdk')
+	const sdkCloneDir = await utils.getSDKCloneDir()
+	const agoricSDKClonePath = path.resolve(sdkCloneDir, 'agoric-sdk')
+	const sdkRepoBranch = utils.defaultSDKRepoBranch
 	await utils.ensureCorrectSDKFolderGitBranch(loggingService)
 
 	const lastLocalAgoricSDKCommit = utils.spawnCmd(
 		'git',
 		['log', '-1', '--pretty=format:%h'],
 		{
-			cwd: agoricSDKPath
+			cwd: agoricSDKClonePath
 		}
 	)
 
-	utils.spawnCmd('git', ['fetch', 'origin', `${utils.sdkRepoBranch}`], {
-		cwd: agoricSDKPath
+	utils.spawnCmd('git', ['fetch', 'origin', sdkRepoBranch], {
+		cwd: agoricSDKClonePath
 	})
 
 	const lastRemoteAgoricSDKCommit = utils.spawnCmd(
 		'git',
-		['log', '-1', `origin/${utils.sdkRepoBranch}`, '--pretty=format:%h'],
+		['log', '-1', `origin/${sdkRepoBranch}`, '--pretty=format:%h'],
 		{
-			cwd: agoricSDKPath
+			cwd: agoricSDKClonePath
 		}
 	)
 

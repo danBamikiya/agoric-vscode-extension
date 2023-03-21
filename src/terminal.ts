@@ -17,20 +17,20 @@ export class AgoricTerminal {
 	private consoleCloseSubscription: vscode.Disposable | undefined
 	private consoleChangeSubscription: vscode.Disposable | undefined
 
-	private sdkDirName = utils.sdkDirName
+	private sdkFolderName = utils.sdkFolderName
 	private sdkRepo = utils.sdkRepo
-	private sdkRepoBranch = utils.sdkRepoBranch
+	private sdkRepoBranch = utils.defaultSDKRepoBranch
 
 	constructor(private title: string, private loggingService: ILogger) {
 		this.onExited = this.onExitedEmitter.event
 	}
 
 	public async startInstall(cliDependencies?: CliDependencies) {
-		const installDir = await utils.getInstallDir()
+		const sdkCloneDir = await utils.getSDKCloneDir()
 
 		const terminalOptions: vscode.TerminalOptions = {
 			name: this.title,
-			cwd: installDir,
+			cwd: sdkCloneDir,
 			isTransient: true
 		}
 
@@ -52,7 +52,7 @@ export class AgoricTerminal {
 		)
 
 		this.checkCliDependencies(cliDependencies)
-		this.setupAgoric(installDir)
+		this.setupAgoric(sdkCloneDir)
 	}
 
 	public showConsole(preserveFocus: boolean) {
@@ -98,11 +98,14 @@ export class AgoricTerminal {
 		return
 	}
 
-	private setupAgoric(installDir: string) {
-		const agoricInstalled = utils.isAgoricInstalled(installDir, this.sdkDirName)
+	private setupAgoric(sdkCloneDir: string) {
+		const agoricSDKCloned = utils.isAgoricSDKCloned(
+			sdkCloneDir,
+			this.sdkFolderName
+		)
 
-		if (agoricInstalled) {
-			this.clearPrevSetup(installDir)
+		if (agoricSDKCloned) {
+			this.clearPrevSetup(sdkCloneDir)
 		}
 
 		this.loggingService.log('Installing and setting up agoric-sdk...')
@@ -110,7 +113,7 @@ export class AgoricTerminal {
 			`git clone -b ${this.sdkRepoBranch} ${this.sdkRepo}`
 		)
 
-		this.consoleTerminal?.sendText(`cd ${this.sdkDirName}`)
+		this.consoleTerminal?.sendText(`cd ${this.sdkFolderName}`)
 
 		if (utils.isWindows) {
 			this.consoleTerminal?.sendText(
@@ -127,20 +130,22 @@ export class AgoricTerminal {
 		this.attemptPATHBinding()
 	}
 
-	private async clearPrevSetup(installDir: string) {
+	private async clearPrevSetup(sdkCloneDir: string) {
 		this.loggingService.log('Deleting previous version of Agoric SDK...')
 
-		// Remove the agoric-sdk directory made from the previously run `git clone ${sdkRepo}`
+		/* Remove the agoric-sdk directory made from the previously run `git clone ${sdkRepo}` */
 		if (utils.isWindows) {
 			this.consoleTerminal?.sendText(
-				`Remove-Item -R -Force -Path ${installDir}/${this.sdkDirName}`
+				`Remove-Item -R -Force -Path ${sdkCloneDir}/${this.sdkFolderName}`
 			)
 		}
 		if (utils.isLinux || utils.isMacOS) {
-			this.consoleTerminal?.sendText(`rm -rf ${installDir}/${this.sdkDirName}`)
+			this.consoleTerminal?.sendText(
+				`rm -rf ${sdkCloneDir}/${this.sdkFolderName}`
+			)
 		}
 
-		// Remove the command from path made from the previously run `yarn link-cli ~/bin/agoric`
+		/* Remove the command from path made from the previously run `yarn link-cli ~/bin/agoric` */
 		if (utils.isWindows) {
 			const prevDir = `${os.homedir()}\bin\agoric`
 			if (await utils.checkIfDirectoryExists(prevDir)) {
@@ -148,18 +153,21 @@ export class AgoricTerminal {
 			}
 		}
 		if (utils.isLinux || utils.isMacOS) {
+			// remove command from temporary path
 			this.consoleTerminal?.sendText(`rm -rf ~/bin/agoric`)
+			// remove command from permanent path
+			this.consoleTerminal?.sendText(`rm -rf /usr/local/bin/agoric`)
 		}
 
-		// Remove any other related path that may obstruct the setup
+		/* Remove any other related path that may obstruct the setup */
 		if (utils.isWindows) {
-			const dir = `${installDir}\bin\agoric`
+			const dir = `${sdkCloneDir}\bin\agoric`
 			if (await utils.checkIfDirectoryExists(dir)) {
 				this.consoleTerminal?.sendText(`Remove-Item -R -Force -Path ${dir}`)
 			}
 		}
 		if (utils.isLinux || utils.isMacOS) {
-			const dir = `${installDir}/bin/agoric`
+			const dir = `${sdkCloneDir}/bin/agoric`
 			if (await utils.checkIfDirectoryExists(dir)) {
 				this.consoleTerminal?.sendText(`rm -rf ${dir}`)
 			}
@@ -172,7 +180,6 @@ export class AgoricTerminal {
 
 		const PATH = process.env.PATH
 		if (!PATH) {
-			// Ideally this isn't supposed to log
 			this.loggingService.logWarning('$PATH is not set, cannot verify')
 		} else {
 			// Attempt Windows compatibility.
@@ -183,10 +190,17 @@ export class AgoricTerminal {
 				)
 
 				if (sep === ';') {
+					// Permanently adds the command to PATH in Windows environment
 					this.consoleTerminal?.sendText(`setx PATH "%PATH%${sep}${bindir}"`)
 				} else {
+					// Temporarily adds the command to PATH in Linux & MacOS environments affecting the current terminal session only
 					this.consoleTerminal?.sendText(`export PATH=$PATH${sep}${bindir}`)
 				}
+			}
+
+			// Add the command permanently to Linux & MacOS environment
+			if (utils.isLinux || utils.isMacOS) {
+				this.consoleTerminal?.sendText('sudo mv ~/bin/agoric /usr/local/bin/')
 			}
 		}
 	}
