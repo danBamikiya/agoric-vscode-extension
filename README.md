@@ -35,7 +35,7 @@ If you want to opt out of this, set the `agoric.autoUpdate` option to false. Eg:
 
 ### agoric.installDir
 
-By default, this extension installs the Agoric SDK in the home directory. Configure a custom install directory by changing the field. Eg:
+By default, this extension clones the Agoric SDK into the home directory. Configure a custom directory to clone the SDK into by changing the field. Eg:
 
 ```json
 {

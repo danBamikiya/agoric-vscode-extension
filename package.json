@@ -67,7 +67,7 @@
         "agoric.installDir": {
           "type": "string",
           "default": null,
-          "description": "An explicit path where Agoric SDK will be installed"
+          "description": "An explicit path where Agoric SDK will be cloned into"
         }
       }
     },
